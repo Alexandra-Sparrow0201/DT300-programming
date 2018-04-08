@@ -8,6 +8,21 @@
 #
 # Created:     04/04/2018
 
+def main():
+    pass
+
+if __name__ == '__main__':
+    main()
+
+#Imports regular expressions. Is used to validate file name
+import re
+
+#import GUI library
+from tkinter import *
+
+#for Python V3 you must explicitely load the messagebox
+import tkinter.messagebox
+
 class ImageMD:
     #Image Metadata
     def __init__(self, imageID, fileName, fileExtension, imageName, owner, licence, photoCategory):
@@ -20,6 +35,7 @@ class ImageMD:
         self.photoC= photoCategory
 
     def get_imageID(self):
+        #imageID = len(recordlist) #As each record is added the image ID is it's position in the list plus 1
         return self.imageID
 
     def get_fileName(self):
@@ -65,8 +81,8 @@ class GUI:
         self.fileName_field.pack(anchor="c")
 
         #code for dropdown menu
-        fileExten_label = Label(window, text='Select File Extension')
-        fileExten_label.pack()
+        FileExten_label = Label(window, text='Select File Extension')
+        FileExten_label.pack()
         self.fileExten_field = StringVar()
         OptionMenu(window, self.fileExten_field, ".jpg", ".png", ".jpeg", ".gif").pack() #Most common image file types
 
@@ -79,19 +95,63 @@ class GUI:
         owner_label.pack(anchor="c")
         self.owner_field = Entry(window)
         self.owner_field.pack(anchor="c")
+        ##self.owner_field.set("WEGC") #Assumes most images with be owned by overseeing organisation
 
-        licence_label = Label(window, text='Select image licence')
-        licence_label.pack()
+        Licence_label = Label(window, text='Select image licence')
+        Licence_label.pack()
         self.licence_field = StringVar()
-        OptionMenu(window, self.licence_field, "1", "2", "3", "4", "5", "6").pack()
+        OptionMenu(window, self.licence_field, "1", "2", "3", "4", "5", "6").pack() #Must add correct Image licence types
 
-        fileExten_label = Label(window, text='Select photo category')
-        fileExten_label.pack()
-        self.fileExten_field = StringVar()
-        OptionMenu(window, self.fileExten_field, "landscape", "person", "group", "document", "signage", "object").pack()
+        PhotoC_label = Label(window, text='Select photo category')
+        PhotoC_label.pack()
+        self.photoC_field = StringVar()
+        OptionMenu(window, self.photoC_field, "Landscape", "Person", "Group", "Document", "Signage", "Object", "Other").pack()
+
+
+        #creates a button. The command function is run when the button is pressed
+        #the 'command=self.doSubmit' is an example of a callback method
+        button_label = Label(window, text='Press to validate:')
+        button = Button(window, text='Submit', command=self.doSubmit)
+
+        button_label1 = Label(window, text='Convert Record to csv')
+        button1 = Button(window, text='write to csv', command=self.writetocsv)
+        button_label.pack()
+        button.pack()
+        button_label1.pack()
+        button1.pack()
 
         #Waits for an event
         window.mainloop()
+
+    def doSubmit(self):
+    #test uniqueness of each school name entered u
+        noduplicate = True;
+        for record in self.recordlist:
+            if self.fileName.get() == record.fileName():
+                noduplicate= False
+                tkinter.messagebox.showwarning('Warning!','Duplicate file name');
+                print('Please enter file name again');
+
+
+        if noduplicate == True:
+        #this is the callback method for the 'Submit' button
+            if len(self.fileName_field.get()) <1 or len(self.fileExten_field.get()) <1 or len(self.owner_field.get()) <1 or len(self.name_field.get()) <1 or len(self.licence_field.get()) <1 or len(self.photoC_field.get()) <1:
+                tkinter.messagebox.showwarning('Warning!','Please enter a value for all fields')
+            else:
+                    if re.match("^[a-zA-Z0-9_]+$", fileName): #Checking that there is only letters, numbers, and undersocores
+                        print("Only alphabetical letters and spaces: yes") #For testing purposes
+
+
+                        #beause all imformation entered has been checking and is good.
+                        self.recordlist.append(ImageMD(self.fileName_field.get(),self.fileExten_field.get(), self.owner_field.get() , self.name_field.get(), self.licence_field.get(), self.photoC_field.get() ))
+                        self.ready_to_write= True
+                        tkinter.messagebox.showinfo('Notice','Submission Sucessful')
+
+                        self.fileName_field.delete(0, END) #command to clear field
+                        self.num_classrooms_field.delete(0, END)
+
+                    else:
+                        print("Please only use letters of the alphabet or numbers for file name. No special characters except undersorces.")
 
 
 #Initialises the programme
