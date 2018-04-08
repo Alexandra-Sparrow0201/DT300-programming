@@ -35,7 +35,7 @@ class ImageMD:
         self.photoC= photoCategory
 
     def get_imageID(self):
-        #imageID = len(recordlist) #As each record is added the image ID is it's position in the list plus 1
+        imageID = len(recordlist) #As each record is added the image ID is it's position in the list plus 1
         return self.imageID
 
     def get_fileName(self):
@@ -73,6 +73,12 @@ class GUI:
 
         heading_label = Label(window, bg = bkcolour, fg = maintxtcolour, text= "TITLE HERE", font= mainfont)
         heading_label.pack()
+
+        #INITIALIZATION VARIABLES
+        #this variable stores whether the data has been validated or not
+        self.ready_to_write = False
+        #this will contain the list of all schools entered via the gui
+        self.recordlist = []
 
         #creating label and field variable in GUI for each entry field
         fileName_label = Label(window, text='Please enter the filename:')
@@ -152,7 +158,25 @@ class GUI:
 
                     else:
                         print("Please only use letters of the alphabet or numbers for file name. No special characters except undersorces.")
+    def writetocsv(self):
+        #This what happens upon clicking the "Write to CSV" button
+        import csv
+        file_name = 'test1.csv' #I prefer csv files are automativally opened by excel rather than notepad
 
+        if self.ready_to_write: #Connects to function that checks data has been validated
+
+            ofile = open(file_name, 'w') #Open file with overwriting permissions.
+            writer = csv.writer(ofile, delimiter =",", lineterminator = "\n")
+            for record in self.recordlist:
+                print(record.full_file_name())
+                writer.writerow([record.get_imageID(), record.get_fileName, record.get_fileExtension(), record.get_imageName(), record.get_owner(), record.get_licence(), record.get_photoC()])
+
+            ofile.close()#To Explicitly close file
+            tkinter.messagebox.showinfo('Notice',file_name+' File Generated Sucessfully')
+        else:
+            tkinter.messagebox.showwarning('Error!', 'You need to Validate your data')
+
+        self.ready_to_write= False #Resetting variables
 
 #Initialises the programme
 GUI()
