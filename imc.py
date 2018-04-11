@@ -83,7 +83,7 @@ class GUI:
         
         #creating label and field variable in GUI for each entry field
         fileName_label = Label(window, text='Please enter the filename:')
-        fileName_label.pack() #.pack() places the component in the window
+        fileName_label.pack(anchor = 'c') #.pack() places the component in the window
         self.fileName_field = Entry(window)
         self.fileName_field.pack(anchor = 'c')
 
@@ -99,14 +99,14 @@ class GUI:
         self.imageID_field.pack()
         
         name_label = Label(window, text='Enter image Name:')
-        name_label.pack(fill= X)
+        name_label.pack()
         self.name_field = Entry(window)
-        self.name_field.pack(fill= X)
+        self.name_field.pack()
 
         owner_label = Label(window, text="Enter Owner's Name:")
-        owner_label.pack(fill= X)
+        owner_label.pack()
         self.owner_field = Entry(window)
-        self.owner_field.pack(fill= X)
+        self.owner_field.pack()
         ##self.owner_field.set("WEGC") #Assumes most images with be owned by overseeing organisation
 
         Licence_label = Label(window, text='Select image licence')
