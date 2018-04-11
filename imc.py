@@ -83,7 +83,7 @@ class GUI:
         
         #creating label and field variable in GUI for each entry field
         fileName_label = Label(window, text='Please enter the filename:')
-        fileName_label.pack(anchor = 'c') #.pack() places the component in the window
+        fileName_label.grid(row = 0 , column = 0 #.pack() places the component in the window
         self.fileName_field = Entry(window)
         self.fileName_field.pack(anchor = 'c')
 
