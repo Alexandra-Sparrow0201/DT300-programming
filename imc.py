@@ -55,10 +55,6 @@ class ImageMD:
     def get_photoC(self):
         return self.photoT
 
-    def gen_imageID(self):
-        imageID = len(recordlist) + 1 #As each record is added the image ID is it's position in the list plus 1
-        return imageID
-
 class GUI:
     #default colour variables makes changing colours easier
     global bkcolour
@@ -84,38 +80,44 @@ class GUI:
         #this will contain the list of all schools entered via the gui
         self.recordlist = []
 
+        
         #creating label and field variable in GUI for each entry field
         fileName_label = Label(window, text='Please enter the filename:')
-        fileName_label.pack(anchor="c") #.pack() places the component in the window
+        fileName_label.pack() #.pack() places the component in the window
         self.fileName_field = Entry(window)
-        self.fileName_field.pack(anchor="c")
+        self.fileName_field.pack(anchor = 'c')
 
         #code for dropdown menu
         FileExten_label = Label(window, text='Select File Extension')
-        FileExten_label.grid()
+        FileExten_label.pack(anchor = 'c')
         self.fileExten_field = StringVar()
-        OptionMenu(window, self.fileExten_field, ".jpg", ".png", ".jpeg", ".gif").pack() #Most common image file types
+        OptionMenu(window, self.fileExten_field, ".jpg", ".png", ".jpeg", ".gif").pack(anchor = 'c') #Most common image file types
 
+        imageID_label = Label(window, text='Enter image ID number:')
+        imageID_label.pack()
+        self.imageID_field = Entry(window)
+        self.imageID_field.pack()
+        
         name_label = Label(window, text='Enter image Name:')
-        name_label.pack(anchor="c")
+        name_label.pack(fill= X)
         self.name_field = Entry(window)
-        self.name_field.pack(anchor="c")
+        self.name_field.pack(fill= X)
 
         owner_label = Label(window, text="Enter Owner's Name:")
-        owner_label.pack(anchor="c")
+        owner_label.pack(fill= X)
         self.owner_field = Entry(window)
-        self.owner_field.pack(anchor="c")
+        self.owner_field.pack(fill= X)
         ##self.owner_field.set("WEGC") #Assumes most images with be owned by overseeing organisation
 
         Licence_label = Label(window, text='Select image licence')
-        Licence_label.pack()
+        Licence_label.pack(anchor = 'c')
         self.licence_field = StringVar()
-        OptionMenu(window, self.licence_field, "1", "2", "3", "4", "5", "6").pack() #Must add correct Image licence types
+        OptionMenu(window, self.licence_field, "1", "2", "3", "4", "5", "6").pack(anchor = 'c') #Must add correct Image licence types
 
         PhotoC_label = Label(window, text='Select photo category')
-        PhotoC_label.pack()
+        PhotoC_label.pack(anchor = 'c')
         self.photoC_field = StringVar()
-        OptionMenu(window, self.photoC_field, "Landscape", "Person", "Group", "Document", "Signage", "Object", "Other").pack()
+        OptionMenu(window, self.photoC_field, "Landscape", "Person", "Group", "Document", "Signage", "Object", "Other").pack(anchor = 'c')
 
 
         #creates a button. The command function is run when the button is pressed
@@ -125,15 +127,16 @@ class GUI:
 
         button_label1 = Label(window, text='Convert Record to csv')
         button1 = Button(window, text='Write To CSV', command=self.writetocsv)
-        button_label.pack()
-        button.pack()
-        button_label1.pack()
-        button1.pack()
+        button_label.pack(anchor = 'c')
+        button.pack(anchor = 'c')
+        button_label1.pack(anchor = 'c')
+        button1.pack(anchor = 'c')
 
         #Waits for an event
         window.mainloop()
 
     def doSubmit(self):
+
     #test uniqueness of each school name entered u
         noduplicate = True;
         for record in self.recordlist:
@@ -145,16 +148,19 @@ class GUI:
 
         if noduplicate == True:
         #this is the callback method for the 'Submit' button
-            if len(self.fileName_field.get()) <1 or len(self.fileExten_field.get()) <1 or len(self.owner_field.get()) <1 or len(self.name_field.get()) <1 or len(self.licence_field.get()) <1 or len(self.photoC_field.get()) <1:
+            if len(self.imageID_field.get()) <1 or len(self.fileName_field.get()) <1 or len(self.fileExten_field.get()) <1 or len(self.owner_field.get()) <1 or len(self.name_field.get()) <1 or len(self.licence_field.get()) <1 or len(self.photoC_field.get()) <1:
                 tkinter.messagebox.showwarning('Warning!','Please enter a value for all fields')
+            elif self.imageID.get() != int: 
+                tkinter.messagebox.showwarning('Warning!','Please enter a numerical value for image ID.')
+            elif self.imageID.get() == record.imageID :
+                 tkinter.messagebox.showwarning('Warning!','Please enter a different numerical value for image ID, this one already exists.')
             else:
                     if re.match("^[a-zA-Z0-9_]+$", self.fileName_field.get()): #Checking that there is only letters, numbers, and undersocores
                         print("Only alphabetical letters and spaces: yes") #For testing purposes
 
 
                         #beause all imformation entered has been checking and is good.
-                        get_imageID()
-                        self.recordlist.append(ImageMD(self.imageID(),self.fileName_field.get(),self.fileExten_field.get(), self.owner_field.get() , self.name_field.get(), self.licence_field.get(), self.photoC_field.get() ))
+                        self.recordlist.append(ImageMD(self.imageID_field.get(),self.fileName_field.get(),self.fileExten_field.get(), self.owner_field.get() , self.name_field.get(), self.licence_field.get(), self.photoC_field.get() ))
                         self.ready_to_write= True
                         tkinter.messagebox.showinfo('Notice','Submission Sucessful')
 
@@ -163,6 +169,7 @@ class GUI:
 
                     else:
                         print("Please only use letters of the alphabet or numbers for file name. No special characters except undersorces.")
+
     def writetocsv(self):
         #This what happens upon clicking the "Write to CSV" button
         import csv
