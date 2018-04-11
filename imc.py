@@ -35,7 +35,6 @@ class ImageMD:
         self.photoC= photoCategory
 
     def get_imageID(self):
-        imageID = len(recordlist) #As each record is added the image ID is it's position in the list plus 1
         return self.imageID
 
     def get_fileName(self):
@@ -56,6 +55,10 @@ class ImageMD:
     def get_photoC(self):
         return self.photoT
 
+    def gen_imageID(self):
+        imageID = len(recordlist) + 1 #As each record is added the image ID is it's position in the list plus 1
+        return imageID
+
 class GUI:
     #default colour variables makes changing colours easier
     global bkcolour
@@ -70,6 +73,7 @@ class GUI:
         window = Tk()
         window.title("Data Entry for Image Metadata")
         window.minsize(width = 400, height= 600)
+       # window.configure(bg= bkcolour)
 
         heading_label = Label(window, bg = bkcolour, fg = maintxtcolour, text= "TITLE HERE", font= mainfont)
         heading_label.pack()
@@ -88,7 +92,7 @@ class GUI:
 
         #code for dropdown menu
         FileExten_label = Label(window, text='Select File Extension')
-        FileExten_label.pack()
+        FileExten_label.grid()
         self.fileExten_field = StringVar()
         OptionMenu(window, self.fileExten_field, ".jpg", ".png", ".jpeg", ".gif").pack() #Most common image file types
 
@@ -120,7 +124,7 @@ class GUI:
         button = Button(window, text='Submit', command=self.doSubmit)
 
         button_label1 = Label(window, text='Convert Record to csv')
-        button1 = Button(window, text='write to csv', command=self.writetocsv)
+        button1 = Button(window, text='Write To CSV', command=self.writetocsv)
         button_label.pack()
         button.pack()
         button_label1.pack()
@@ -144,12 +148,13 @@ class GUI:
             if len(self.fileName_field.get()) <1 or len(self.fileExten_field.get()) <1 or len(self.owner_field.get()) <1 or len(self.name_field.get()) <1 or len(self.licence_field.get()) <1 or len(self.photoC_field.get()) <1:
                 tkinter.messagebox.showwarning('Warning!','Please enter a value for all fields')
             else:
-                    if re.match("^[a-zA-Z0-9_]+$", fileName): #Checking that there is only letters, numbers, and undersocores
+                    if re.match("^[a-zA-Z0-9_]+$", self.fileName_field.get()): #Checking that there is only letters, numbers, and undersocores
                         print("Only alphabetical letters and spaces: yes") #For testing purposes
 
 
                         #beause all imformation entered has been checking and is good.
-                        self.recordlist.append(ImageMD(self.fileName_field.get(),self.fileExten_field.get(), self.owner_field.get() , self.name_field.get(), self.licence_field.get(), self.photoC_field.get() ))
+                        get_imageID()
+                        self.recordlist.append(ImageMD(self.imageID(),self.fileName_field.get(),self.fileExten_field.get(), self.owner_field.get() , self.name_field.get(), self.licence_field.get(), self.photoC_field.get() ))
                         self.ready_to_write= True
                         tkinter.messagebox.showinfo('Notice','Submission Sucessful')
 
