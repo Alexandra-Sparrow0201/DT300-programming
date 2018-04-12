@@ -167,15 +167,13 @@ class GUI:
         #this is the callback method for the 'Submit' button
             if len(self.imageID_field.get()) <1 or len(self.fileName_field.get()) <1 or len(self.fileExten_field.get()) <1 or len(self.owner_field.get()) <1 or len(self.name_field.get()) <1 or len(self.licence_field.get()) <1 or len(self.photoC_field.get()) <1:
                 tkinter.messagebox.showwarning('Warning!','Please enter a value for all fields')
-                
-           # elif self.imageID_field.get() is not int:
-               # print (self.imageID_field.get())
-                #tkinter.messagebox.showwarning('Warning!','Please enter a numerical value for image ID.')
-                 
+  
             else:
+                try:
+                    validated_imageID = int(self.imageID_field.get())
+                    
                     if re.match("^[a-zA-Z0-9_]+$", self.fileName_field.get()): #Checking that there is only letters, numbers, and undersocores
-                        print("Only alphabetical letters and spaces: yes") #For testing purposes
-
+                        #print("Only alphabetical letters and spaces: yes") #For testing purposes
 
                         #beause all imformation entered has been checking and is good.
                         self.recordlist.append(ImageMD(self.imageID_field.get(),self.fileName_field.get(),self.fileExten_field.get(), self.owner_field.get() , self.name_field.get(), self.licence_field.get(), self.photoC_field.get() ))
@@ -186,15 +184,22 @@ class GUI:
                         self.imageID_field.delete(0, END)
                         self.owner_field.delete(0, END)
                         self.name_field.delete(0, END)
-
                     else:
-                        print("Please only use letters of the alphabet or numbers for file name. No special characters except undersorces.")
+                        tkinter.messagebox.showwarning("Please only use letters of the alphabet or numbers for file name. No special characters except undersorces.")
+
+                except:
+                    tkinter.messagebox.showwarning('Warning!','Please enter numeric image ID.')
+                    print('Please enter image ID size')
+                    
+                
+                
 
     def writetocsv(self):
         #This what happens upon clicking the "Write to CSV" button
         import csv
-        for record in self.recordlist:
-                print(record.full_file_name())
+        """for record in self.recordlist: #For testing purposes
+                print(record.full_file_name())"""
+        
         file_name = 'test1.csv' #I prefer csv files are automativally opened by excel rather than notepad
 
         if self.ready_to_write: #Connects to function that checks data has been validated
