@@ -172,8 +172,12 @@ class GUI:
             else:
                 try:
                     validated_imageID = int(self.imageID_field.get())
+                    if validated_imageID <= 0:
+                       tkinter.messagebox.showwarning("Error", "Make sure image ID is greater than zero")
+                       ready_to_write = False
+
                     
-                    if re.match("^[a-zA-Z0-9_]+$", self.fileName_field.get()): #Checking that there is only letters, numbers, and undersocores
+                    elif re.match("^[a-zA-Z0-9_]+$", self.fileName_field.get()): #Checking that there is only letters, numbers, and underscores
                         #print("Only alphabetical letters and spaces: yes") #For testing purposes
 
                         #beause all imformation entered has been checking and is good.
@@ -185,7 +189,7 @@ class GUI:
                         self.imageID_field.delete(0, END)
                         self.name_field.delete(0, END)
                     else:
-                        tkinter.messagebox.showwarning("Please only use letters of the alphabet or numbers for file name. No special characters except undersorces.")
+                        tkinter.messagebox.showwarning("Error", "Please only use letters of the alphabet or numbers for file name. No special characters except undersorces.")
 
                 except:
                     tkinter.messagebox.showwarning('Warning!','Please enter numeric image ID.')
