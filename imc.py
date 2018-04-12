@@ -59,20 +59,25 @@ class GUI:
     #default colour variables makes changing colours easier
     global bkcolour
     global maintxtcolour
+    global tfont
     global mainfont
+    global bcolour
     bkcolour= '#c0deed'
+    bcolour = '#4885ed' #For buttons 
     maintxtcolour= 'black'
-    mainfont = ('Times', '24')
+    tfont = ('Calibri', '12')# For the text
+    mainfont = ('Calibri', '24') #For the header
 
     def __init__(self):
 
         window = Tk()
         window.title("Data Entry for Image Metadata")
-        window.minsize(width = 400, height= 600)
-       # window.configure(bg= bkcolour)
+        window.minsize(width = 370, height= 400)
+        window.configure(bg = bkcolour)
 
-        heading_label = Label(window, bg = bkcolour, fg = maintxtcolour, text= "TITLE HERE", font= mainfont)
-        heading_label.pack()
+        heading_label = Label(window, fg = maintxtcolour,bg = bkcolour, text= "Image Metadata", font= mainfont)
+        heading_label.grid(row = 0, columnspan = 2, sticky = W+E)
+        
 
         #INITIALIZATION VARIABLES
         #this variable stores whether the data has been validated or not
@@ -82,78 +87,87 @@ class GUI:
 
         
         #creating label and field variable in GUI for each entry field
-        fileName_label = Label(window, text='Please enter the filename:')
-        fileName_label.grid(row = 0 , column = 0 #.pack() places the component in the window
+        fileName_label = Label(window, text='Please enter the filename:',bg = bkcolour, font= tfont)
+        fileName_label.grid(row = 1 , column = 0, padx =5, pady =2 ) #.grid places the component in the window in a grid format
         self.fileName_field = Entry(window)
-        self.fileName_field.pack(anchor = 'c')
+        self.fileName_field.grid(row = 2, column = 0, padx =5, pady =5 )
+        self.fileName_field.focus_set()
 
         #code for dropdown menu
-        FileExten_label = Label(window, text='Select File Extension')
-        FileExten_label.pack(anchor = 'c')
+        FileExten_label = Label(window, text='Select file extension',bg = bkcolour, font= tfont)
+        FileExten_label.grid(row = 1, column = 1, padx =5, pady =2)
         self.fileExten_field = StringVar()
-        OptionMenu(window, self.fileExten_field, ".jpg", ".png", ".jpeg", ".gif").pack(anchor = 'c') #Most common image file types
+        OptionMenu(window, self.fileExten_field, ".jpg", ".png", ".jpeg", ".gif").grid(row = 2, column = 1, padx =5, pady =5 ) #Most common image file types
 
-        imageID_label = Label(window, text='Enter image ID number:')
-        imageID_label.pack()
+        imageID_label = Label(window, text='Enter image ID number:',bg = bkcolour, font= tfont)
+        imageID_label.grid(row = 3, column = 0, sticky = W , padx =5, pady =5 )
         self.imageID_field = Entry(window)
-        self.imageID_field.pack()
+        self.imageID_field.grid(row = 3, column = 1, padx =5, pady =5 )
         
-        name_label = Label(window, text='Enter image Name:')
-        name_label.pack()
+        name_label = Label(window, text='Enter image name:', bg = bkcolour, font= tfont)
+        name_label.grid(row = 4, column = 0, sticky = W, padx =5, pady =5 )
         self.name_field = Entry(window)
-        self.name_field.pack()
+        self.name_field.grid(row = 4, column = 1)
 
-        owner_label = Label(window, text="Enter Owner's Name:")
-        owner_label.pack()
+        owner_label = Label(window, text="Enter Owner's name:",bg = bkcolour, font= tfont)
+        owner_label.grid(row = 5, column = 0, sticky = W, padx =5, pady =5 )
         self.owner_field = Entry(window)
-        self.owner_field.pack()
-        ##self.owner_field.set("WEGC") #Assumes most images with be owned by overseeing organisation
+        self.owner_field.grid(row = 5, column = 1, padx =5, pady =5 )
+        self.owner_field.insert(END, 'WEGC') #Assumes most images with be owned by overseeing organisation
 
-        Licence_label = Label(window, text='Select image licence')
-        Licence_label.pack(anchor = 'c')
+        Licence_label = Label(window, text='Select image licence acronym',bg = bkcolour, font= tfont)
+        Licence_label.grid(row = 6, column = 0, padx =5, pady =5 )
         self.licence_field = StringVar()
-        OptionMenu(window, self.licence_field, "1", "2", "3", "4", "5", "6").pack(anchor = 'c') #Must add correct Image licence types
+        OptionMenu(window, self.licence_field, "CC0", "BY", "BY-NC", "BY-ND", "BY-NC-SA", "BY-NC-ND").grid(row = 7, column = 0, padx =5, pady =5 ) #Must add correct Image licence types
 
-        PhotoC_label = Label(window, text='Select photo category')
-        PhotoC_label.pack(anchor = 'c')
+        PhotoC_label = Label(window, text='Select photo category',bg = bkcolour, font= tfont)
+        PhotoC_label.grid(row = 6, column = 1, padx =5, pady =5 )
         self.photoC_field = StringVar()
-        OptionMenu(window, self.photoC_field, "Landscape", "Person", "Group", "Document", "Signage", "Object", "Other").pack(anchor = 'c')
+        OptionMenu(window, self.photoC_field, "Landscape", "Person", "Group", "Document", "Signage", "Object", "Other").grid(row = 7, column = 1, padx =5, pady =5 )
 
 
         #creates a button. The command function is run when the button is pressed
         #the 'command=self.doSubmit' is an example of a callback method
-        button_label = Label(window, text='Press to validate:')
-        button = Button(window, text='Submit', command=self.doSubmit)
+        button_label = Label(window, text='Press to validate:',bg = bkcolour, font= tfont)
+        button = Button(window,bg = bcolour, text='Submit', command=self.doSubmit)
 
-        button_label1 = Label(window, text='Convert Record to csv')
-        button1 = Button(window, text='Write To CSV', command=self.writetocsv)
-        button_label.pack(anchor = 'c')
-        button.pack(anchor = 'c')
-        button_label1.pack(anchor = 'c')
-        button1.pack(anchor = 'c')
+        button1_label = Label(window, text='Convert record to csv',bg = bkcolour, font= tfont)
+        button1 = Button(window, bg = bcolour, text='Write to csv', command=self.writetocsv)
+        
+        button_label.grid(row = 8, column = 0, padx =5, pady =5 )
+        button.grid(row = 9, column = 0, padx =5, pady =5 )
+        button1_label.grid(row = 8, column = 1, padx =5, pady =5 )
+        button1.grid(row = 9, column = 1, padx =5, pady =5 )
 
         #Waits for an event
         window.mainloop()
 
     def doSubmit(self):
 
-    #test uniqueness of each school name entered u
+    #test uniqueness of each school name entered
         noduplicate = True;
         for record in self.recordlist:
-            if self.fileName.get() == record.fileName():
+            if self.fileName_field.get() == record.get_fileName():
                 noduplicate= False
                 tkinter.messagebox.showwarning('Warning!','Duplicate file name');
                 print('Please enter file name again');
+                     
+        for record in self.recordlist:
+            if self.imageID_field.get() == record.get_imageID():
+                noduplicate= False
+                tkinter.messagebox.showwarning('Warning!','Please enter a different numerical value for image ID, this one already exists.')
+                print('Please enter image ID again');
 
 
         if noduplicate == True:
         #this is the callback method for the 'Submit' button
             if len(self.imageID_field.get()) <1 or len(self.fileName_field.get()) <1 or len(self.fileExten_field.get()) <1 or len(self.owner_field.get()) <1 or len(self.name_field.get()) <1 or len(self.licence_field.get()) <1 or len(self.photoC_field.get()) <1:
                 tkinter.messagebox.showwarning('Warning!','Please enter a value for all fields')
-            elif self.imageID.get() != int: 
-                tkinter.messagebox.showwarning('Warning!','Please enter a numerical value for image ID.')
-            elif self.imageID.get() == record.imageID :
-                 tkinter.messagebox.showwarning('Warning!','Please enter a different numerical value for image ID, this one already exists.')
+                
+           # elif self.imageID_field.get() is not int:
+               # print (self.imageID_field.get())
+                #tkinter.messagebox.showwarning('Warning!','Please enter a numerical value for image ID.')
+                 
             else:
                     if re.match("^[a-zA-Z0-9_]+$", self.fileName_field.get()): #Checking that there is only letters, numbers, and undersocores
                         print("Only alphabetical letters and spaces: yes") #For testing purposes
