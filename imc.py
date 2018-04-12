@@ -102,7 +102,8 @@ class GUI:
         FileExten_label.grid(row = 1, column = 1, padx =5, pady =2)
         self.fileExten_field = StringVar()
         OptionMenu(window, self.fileExten_field, ".jpg", ".png", ".jpeg", ".gif").grid(row = 2, column = 1, padx =5, pady =5 ) #Most common image file types
-
+        #This is not cleared as if you are entering multiple images this is unlikely to change often
+        
         imageID_label = Label(window, text='Enter image ID number:',bg = bkcolour, font= tfont)
         imageID_label.grid(row = 3, column = 0, sticky = W , padx =5, pady =5 )
         self.imageID_field = Entry(window)
@@ -122,26 +123,27 @@ class GUI:
         Licence_label = Label(window, text='Select image licence acronym',bg = bkcolour, font= tfont)
         Licence_label.grid(row = 6, column = 0, padx =5, pady =5 )
         self.licence_field = StringVar()
-        OptionMenu(window, self.licence_field, "CC0", "BY", "BY-NC", "BY-ND", "BY-NC-SA", "BY-NC-ND").grid(row = 7, column = 0, padx =5, pady =5 ) #Must add correct Image licence types
-
+        OptionMenu(window, self.licence_field, "CC0", "BY", "BY-SA", "BY-NC", "BY-ND", "BY-NC-SA", "BY-NC-ND").grid(row = 7, column = 0, padx =5, pady =5 ) #Must add correct Image licence types
+        #This is not cleared as if you are entering multiple images this is unlikely to change often
+        
         PhotoC_label = Label(window, text='Select photo category',bg = bkcolour, font= tfont)
         PhotoC_label.grid(row = 6, column = 1, padx =5, pady =5 )
         self.photoC_field = StringVar()
         OptionMenu(window, self.photoC_field, "Landscape", "Person", "Group", "Document", "Signage", "Object", "Other").grid(row = 7, column = 1, padx =5, pady =5 )
-
+        #This is not cleared as if you are entering multiple images this is unlikely to change often
 
         #creates a button. The command function is run when the button is pressed
         #the 'command=self.doSubmit' is an example of a callback method
-        button_label = Label(window, text='Press to validate:',bg = bkcolour, font= tfont)
-        button = Button(window,bg = bcolour, text='Submit', command=self.doSubmit)
+        #button_label = Label(window, text='Press to validate:',bg = bkcolour, font= tfont) Not needed
+        button = Button(window,bg = bcolour, text='Validate and Submit', command=self.doSubmit)
 
-        button1_label = Label(window, text='Convert record to csv',bg = bkcolour, font= tfont)
+        #button1_label = Label(window, text='Convert record to csv',bg = bkcolour, font= tfont) Not needed
         button1 = Button(window, bg = bcolour, text='Write to csv', command=self.writetocsv)
         
-        button_label.grid(row = 8, column = 0, padx =5, pady =5 )
-        button.grid(row = 9, column = 0, padx =5, pady =5 )
-        button1_label.grid(row = 8, column = 1, padx =5, pady =5 )
-        button1.grid(row = 9, column = 1, padx =5, pady =5 )
+        #button_label.grid(row = 8, column = 0, padx =5, pady =5 )
+        button.grid(row = 8, column = 0, padx =5, pady =5 )
+        #button1_label.grid(row = 8, column = 1, padx =5, pady =5 )
+        button1.grid(row = 8, column = 1, padx =5, pady =5 )
 
         #Waits for an event
         window.mainloop()
@@ -167,7 +169,6 @@ class GUI:
         #this is the callback method for the 'Submit' button
             if len(self.imageID_field.get()) <1 or len(self.fileName_field.get()) <1 or len(self.fileExten_field.get()) <1 or len(self.owner_field.get()) <1 or len(self.name_field.get()) <1 or len(self.licence_field.get()) <1 or len(self.photoC_field.get()) <1:
                 tkinter.messagebox.showwarning('Warning!','Please enter a value for all fields')
-  
             else:
                 try:
                     validated_imageID = int(self.imageID_field.get())
@@ -182,14 +183,13 @@ class GUI:
 
                         self.fileName_field.delete(0, END) #command to clear field
                         self.imageID_field.delete(0, END)
-                        self.owner_field.delete(0, END)
                         self.name_field.delete(0, END)
                     else:
                         tkinter.messagebox.showwarning("Please only use letters of the alphabet or numbers for file name. No special characters except undersorces.")
 
                 except:
                     tkinter.messagebox.showwarning('Warning!','Please enter numeric image ID.')
-                    print('Please enter image ID size')
+                    print('Please enter image ID')
                     
                 
                 
@@ -200,7 +200,7 @@ class GUI:
         """for record in self.recordlist: #For testing purposes
                 print(record.full_file_name())"""
         
-        file_name = 'test1.csv' #I prefer csv files are automativally opened by excel rather than notepad
+        file_name = 'image_meta.csv' #I prefer csv files are automativally opened by excel rather than notepad
 
         if self.ready_to_write: #Connects to function that checks data has been validated
 
