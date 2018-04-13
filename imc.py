@@ -20,7 +20,7 @@ import re
 #import GUI library
 from tkinter import *
 
-#for Python V3 you must explicitely load the messagebox
+#explicitely loads the messagebox
 import tkinter.messagebox
 
 class ImageMD:
@@ -66,7 +66,7 @@ class GUI:
     global tfont
     global mainfont
     global bcolour
-    bkcolour= '#c0deed'
+    bkcolour= '#c0deed' #Background colour
     bcolour = '#4885ed' #For buttons 
     maintxtcolour= 'black'
     tfont = ('Calibri', '12')# For the text
@@ -76,7 +76,7 @@ class GUI:
 
         window = Tk()
         window.title("Data Entry for Image Metadata")
-        window.minsize(width = 370, height= 400)
+        window.minsize(width = 370, height= 400) #Widget size determined through trial and error
         window.configure(bg = bkcolour)
 
         heading_label = Label(window, fg = maintxtcolour,bg = bkcolour, text= "Image Metadata", font= mainfont)
@@ -86,16 +86,16 @@ class GUI:
         #INITIALIZATION VARIABLES
         #this variable stores whether the data has been validated or not
         self.ready_to_write = False
-        #this will contain the list of all schools entered via the gui
+        #this will contain the list of all image metadata entered via the gui
         self.recordlist = []
 
         
-        #creating label and field variable in GUI for each entry field
+        #creating label and field variable in for each entry field
         fileName_label = Label(window, text='Please enter the filename:',bg = bkcolour, font= tfont)
         fileName_label.grid(row = 1 , column = 0, padx =5, pady =2 ) #.grid places the component in the window in a grid format
         self.fileName_field = Entry(window)
-        self.fileName_field.grid(row = 2, column = 0, padx =5, pady =5 )
-        self.fileName_field.focus_set()
+        self.fileName_field.grid(row = 2, column = 0, padx =5, pady =5)
+        self.fileName_field.focus()
 
         #code for dropdown menu
         FileExten_label = Label(window, text='Select file extension',bg = bkcolour, font= tfont)
@@ -105,7 +105,7 @@ class GUI:
         #This is not cleared as if you are entering multiple images this is unlikely to change often
         
         imageID_label = Label(window, text='Enter image ID number:',bg = bkcolour, font= tfont)
-        imageID_label.grid(row = 3, column = 0, sticky = W , padx =5, pady =5 )
+        imageID_label.grid(row = 3, column = 0, sticky = W , padx =5, pady =5)
         self.imageID_field = Entry(window)
         self.imageID_field.grid(row = 3, column = 1, padx =5, pady =5 )
         
@@ -149,15 +149,15 @@ class GUI:
         window.mainloop()
 
     def doSubmit(self):
-
-    #test uniqueness of each school name entered
+        #This runs when the submit button is pressed
         noduplicate = True;
+        #test uniqueness of each file name entered
         for record in self.recordlist:
             if self.fileName_field.get() == record.get_fileName():
                 noduplicate= False
                 tkinter.messagebox.showwarning('Warning!','Duplicate file name');
                 print('Please enter file name again');
-                     
+        #Test uniqueness of each image ID entered            
         for record in self.recordlist:
             if self.imageID_field.get() == record.get_imageID():
                 noduplicate= False
@@ -166,7 +166,6 @@ class GUI:
 
 
         if noduplicate == True:
-        #this is the callback method for the 'Submit' button
             if len(self.imageID_field.get()) <1 or len(self.fileName_field.get()) <1 or len(self.fileExten_field.get()) <1 or len(self.owner_field.get()) <1 or len(self.name_field.get()) <1 or len(self.licence_field.get()) <1 or len(self.photoC_field.get()) <1:
                 tkinter.messagebox.showwarning('Warning!','Please enter a value for all fields')
             else:
@@ -185,9 +184,10 @@ class GUI:
                         self.ready_to_write= True
                         tkinter.messagebox.showinfo('Notice','Submission Sucessful')
 
-                        self.fileName_field.delete(0, END) #command to clear field
+                        self.fileName_field.delete(0, END) #command to clear fields
                         self.imageID_field.delete(0, END)
                         self.name_field.delete(0, END)
+                        self.fileName_field.focus()#Moves cursor to file name field
                     else:
                         tkinter.messagebox.showwarning("Error", "Please only use letters of the alphabet or numbers for file name. No special characters except undersorces.")
 
@@ -206,9 +206,9 @@ class GUI:
         
         file_name = 'image_meta.csv' #I prefer csv files are automativally opened by excel rather than notepad
 
-        if self.ready_to_write: #Connects to function that checks data has been validated
+        if self.ready_to_write: #Checks data has been validated
 
-            ofile = open(file_name, 'w') #Open file with overwriting permissions.
+            ofile = open(file_name, 'w') #Open file with overwriting permissions. I use the the w because it means I dont have to the clear the list each time and therefore will not be able to check against other entries for dupilicates.
             writer = csv.writer(ofile, delimiter =",", lineterminator = "\n")
             for record in self.recordlist:
                 print(record.full_file_name())
