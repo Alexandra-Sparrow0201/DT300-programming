@@ -17,6 +17,9 @@ if __name__ == '__main__':
 #Imports regular expressions. Is used to validate file name
 import re
 
+#Importing CSV library
+import csv
+
 #import GUI library
 from tkinter import *
 
@@ -157,6 +160,7 @@ class GUI:
                 noduplicate= False
                 tkinter.messagebox.showwarning('Warning!','Duplicate file name');
                 print('Please enter file name again');
+                
         #Test uniqueness of each image ID entered            
         for record in self.recordlist:
             if self.imageID_field.get() == record.get_imageID():
@@ -166,15 +170,22 @@ class GUI:
 
 
         if noduplicate == True:
-            if len(self.imageID_field.get()) <1 or len(self.fileName_field.get()) <1 or len(self.fileExten_field.get()) <1 or len(self.owner_field.get()) <1 or len(self.name_field.get()) <1 or len(self.licence_field.get()) <1 or len(self.photoC_field.get()) <1:
+            if len(self.fileName_field.get()) > 250: 
+                tkinter.messagebox.showwarning('Warning!','File Name has exceeded maximum character length of 250 please reduce input.')
+                
+            elif len(self.imageID_field.get()) <1 or len(self.fileName_field.get()) <1 or len(self.fileExten_field.get()) <1 or len(self.owner_field.get()) <1 or len(self.name_field.get()) <1 or len(self.licence_field.get()) <1 or len(self.photoC_field.get()) <1:
                 tkinter.messagebox.showwarning('Warning!','Please enter a value for all fields')
+                
             else:
                 try:
                     validated_imageID = int(self.imageID_field.get())
                     if validated_imageID <= 0:
                        tkinter.messagebox.showwarning("Error", "Make sure image ID is greater than zero")
                        ready_to_write = False
-
+                       
+                    elif validated_imageID >250:
+                        tkinter.messagebox.showwarning("Error", "Make sure image ID is less than 250")
+                        ready_to_write = False
                     
                     elif re.match("^[a-zA-Z0-9_]+$", self.fileName_field.get()): #Checking that there is only letters, numbers, and underscores
                         #print("Only alphabetical letters and spaces: yes") #For testing purposes
@@ -200,7 +211,6 @@ class GUI:
 
     def writetocsv(self):
         #This what happens upon clicking the "Write to CSV" button
-        import csv
         """for record in self.recordlist: #For testing purposes
                 print(record.full_file_name())"""
         
